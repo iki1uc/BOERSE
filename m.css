@@ -1,0 +1,11 @@
+.market-box {
+    padding: 20px;
+    background: #111;
+    color: #fff;
+    font-size: 18px;
+    border: 1px solid #555;
+    white-space: pre-wrap;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-family: monospace;
+}
