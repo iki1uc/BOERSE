@@ -1,1 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="../m.css">
+    <title>MARKT 4</title>
+</head>
+<body>
+
+<h2>MARKT 4 – ECO Start</h2>
+
+<div id="markt4-start" class="market-box">Loading…</div>
+<div id="markt4-value" class="market-box">Loading…</div>
+
+<script type="module">
+import { marketData } from "./marketData.js";
+
+document.getElementById("markt4-start").textContent =
+    `Markt 4 (ECO Start): ${marketData.markt4.ecoStart}`;
+
+document.getElementById("markt4-value").textContent =
+    `Markt 4 (ECO Wert): ${marketData.markt4.ecoValue ?? "noch nicht erzeugt"}`;
+</script>
+
+</body>
+</html>
 
