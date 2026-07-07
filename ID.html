@@ -1,1 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ID – WURMLOCH GATE</title>
+    <link rel="stylesheet" href="m.css">
+</head>
+<body>
+
+<h2>ID – WURMLOCH GATE</h2>
+
+<!-- WURMLOCH GATE -->
+<div id="wurmloch-gate" class="market-box">
+    WURMLOCH GATE // waiting…
+</div>
+
+<!-- GATE-KETTE -->
+<div id="gate-kette" class="market-box">
+    GATE-KETTE // waiting…
+</div>
+
+<!-- CLUSTER-ANKER -->
+<div id="cluster-anker" class="market-box">
+    CLUSTER-ANKER // waiting…
+</div>
+
+<!-- MULTINORM-MODUL -->
+<div id="multinorm-modul" class="market-box">
+    MULTINORM-MODUL // waiting…
+</div>
+
+<!-- MARKT 2 / 3 / 4 -->
+<div id="markt2-box" class="market-box"></div>
+<div id="markt3-box" class="market-box"></div>
+<div id="markt4-box" class="market-box"></div>
+
+<!-- GHOST-SCAN -->
+<div id="ghostscan" class="market-box">
+    GHOST-SCAN // waiting…
+</div>
+
+<script type="module">
+import { marketData } from "./MARKT/marketData.js";
+import { scanEVO } from "./MARKT/SCAN81/scanEVO.js";
+
+async function IDGate() {
+
+    // WURMLOCH GATE
+    document.getElementById("wurmloch-gate").textContent =
+        "WURMLOCH GATE aktiv ✓";
+
+    // GATE-KETTE
+    document.getElementById("gate-kette").textContent =
+        "GATE-KETTE verbunden ✓";
+
+    // CLUSTER-ANKER
+    document.getElementById("cluster-anker").textContent =
+        "CLUSTER-ANKER stabil ✓";
+
+    // MULTINORM-MODUL
+    document.getElementById("multinorm-modul").textContent =
+        "MULTINORM-Modul geladen ✓";
+
+    // MARKT 2
+    document.getElementById("markt2-box").textContent =
+        `Markt 2 (Altwert): ${marketData.markt2}`;
+
+    // MARKT 3
+    document.getElementById("markt3-box").textContent =
+        `Markt 3 (Neuwert): ${marketData.markt3}`;
+
+    // MARKT 4
+    document.getElementById("markt4-box").textContent =
+        `Markt 4 (ECO Start): ${marketData.markt4.ecoStart}`;
+
+    // GHOST-SCAN
+    try {
+        const scan = await scanEVO();
+        document.getElementById("ghostscan").textContent =
+            `GHOST-SCAN ✓\n${JSON.stringify(scan, null, 2)}`;
+    } catch (err) {
+        document.getElementById("ghostscan").textContent =
+            "GHOST-SCAN ERROR: " + err.message;
+    }
+}
+
+IDGate();
+setInterval(IDGate, 2000);
+</script>
+
+</body>
+</html>
 
