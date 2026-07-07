@@ -1,107 +1,85 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>BOERSE – ROOT GATE</title>
+    <title>BOERSE – 6er Markt Rotation</title>
     <link rel="stylesheet" href="m.css">
 </head>
 <body>
 
-<h2>BOERSE – ROOT GATE</h2>
+<h2>BOERSE – 6er Markt Rotation</h2>
 
-<!-- ID WURMLOCH GATE -->
-<div id="id-wurmloch" class="market-box">
-    ID-WURMLOCH // waiting…
-</div>
-
-<!-- GATE-KETTE -->
-<div id="gate-kette" class="market-box">
-    GATE-KETTE // waiting…
-</div>
-
-<!-- CLUSTER-ANKER -->
-<div id="cluster-anker" class="market-box">
-    CLUSTER-ANKER // waiting…
-</div>
-
-<!-- MULTINORM-MODUL -->
-<div id="multinorm-modul" class="market-box">
-    MULTINORM-MODUL // waiting…
-</div>
-
-<!-- MARKT 2 / 3 / 4 -->
-<div id="markt2-box" class="market-box"></div>
-<div id="markt3-box" class="market-box"></div>
-<div id="markt4-box" class="market-box"></div>
-
-<!-- SCAN81 -->
-<div id="scan81-box" class="market-box">
-    SCAN81 // waiting…
-</div>
-
-<!-- GHOST-SCAN -->
-<div id="ghostscan" class="market-box">
-    GHOST-SCAN // waiting…
+<div id="rotation-box" class="market-box">
+    Lade BOERSE Rotation…
 </div>
 
 <script type="module">
 import { marketData } from "./MARKT/marketData.js";
 import { scanEVO } from "./MARKT/SCAN81/scanEVO.js";
 
-async function rootGate() {
+let step = 0;
 
-    // ID WURMLOCH GATE
-    document.getElementById("id-wurmloch").textContent =
-        "ID-WURMLOCH aktiv ✓";
+async function nextTable() {
 
-    // GATE-KETTE
-    document.getElementById("gate-kette").textContent =
-        "GATE-KETTE verbunden ✓";
+    const box = document.getElementById("rotation-box");
 
-    // CLUSTER-ANKER
-    document.getElementById("cluster-anker").textContent =
-        "CLUSTER-ANKER stabil ✓";
+    switch(step) {
 
-    // MULTINORM-MODUL
-    document.getElementById("multinorm-modul").textContent =
-        "MULTINORM-Modul geladen ✓";
+        // 1 — MARKT 2
+        case 0:
+            box.textContent =
+                `MARKT 2\nAltwert: ${marketData.markt2}`;
+            break;
 
-    // MARKT 2
-    document.getElementById("markt2-box").textContent =
-        `Markt 2 (Altwert): ${marketData.markt2}`;
+        // 2 — MARKT 3
+        case 1:
+            box.textContent =
+                `MARKT 3\nNeuwert: ${marketData.markt3}`;
+            break;
 
-    // MARKT 3
-    document.getElementById("markt3-box").textContent =
-        `Markt 3 (Neuwert): ${marketData.markt3}`;
+        // 3 — MARKT 4
+        case 2:
+            box.textContent =
+                `MARKT 4\nECO Start: ${marketData.markt4.ecoStart}`;
+            break;
 
-    // MARKT 4
-    document.getElementById("markt4-box").textContent =
-        `Markt 4 (ECO Start): ${marketData.markt4.ecoStart}`;
+        // 4 — SCAN81
+        case 3:
+            try {
+                const scan = await scanEVO();
+                box.textContent =
+                    `SCAN81\n${JSON.stringify(scan, null, 2)}`;
+            } catch (err) {
+                box.textContent = "SCAN81 ERROR: " + err.message;
+            }
+            break;
 
-    // SCAN81
-    try {
-        const scan = await scanEVO();
-        document.getElementById("scan81-box").textContent =
-            `SCAN81 ✓\n${JSON.stringify(scan, null, 2)}`;
-    } catch (err) {
-        document.getElementById("scan81-box").textContent =
-            "SCAN81 ERROR: " + err.message;
+        // 5 — GHOST-SCAN
+        case 4:
+            try {
+                const res = await fetch("https://iki1uc.github.io/BOERSE/");
+                box.textContent =
+                    res.ok
+                    ? `GHOST-SCAN\nBOERSE ONLINE (${res.status})`
+                    : `GHOST-SCAN\nBOERSE ERROR (${res.status})`;
+            } catch (err) {
+                box.textContent = "GHOST-SCAN ERROR: " + err.message;
+            }
+            break;
+
+        // 6 — ID-GATE
+        case 5:
+            box.textContent =
+                `ID-GATE\nWURMLOCH ✓\nGATE-KETTE ✓\nCLUSTER-ANKER ✓\nMULTINORM ✓`;
+            break;
     }
 
-    // GHOST-SCAN
-    try {
-        const res = await fetch("https://iki1uc.github.io/BOERSE/");
-        document.getElementById("ghostscan").textContent =
-            res.ok
-            ? `GHOST-SCAN ✓ BOERSE erreichbar (${res.status})`
-            : `GHOST-SCAN ✗ Fehler (${res.status})`;
-    } catch (err) {
-        document.getElementById("ghostscan").textContent =
-            "GHOST-SCAN ERROR: " + err.message;
-    }
+    // Nächster Schritt
+    step = (step + 1) % 6;
 }
 
-rootGate();
-setInterval(rootGate, 2000);
+// Start
+nextTable();
+setInterval(nextTable, 2000);
 </script>
 
 </body>
