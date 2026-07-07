@@ -1,85 +1,59 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>BOERSE – 6er Markt Rotation</title>
-    <link rel="stylesheet" href="m.css">
+    <title>BOERSE – Mini Dashboard</title>
+    <style>
+        body {
+            background: #111;
+            color: #eee;
+            font-family: Arial;
+            padding: 20px;
+        }
+        .box {
+            background: #222;
+            border: 1px solid #444;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            font-size: 20px;
+        }
+        .title {
+            font-size: 26px;
+            margin-bottom: 10px;
+            color: #0f0;
+        }
+    </style>
 </head>
 <body>
 
-<h2>BOERSE – 6er Markt Rotation</h2>
+<h2>BOERSE – Mini Dashboard</h2>
 
-<div id="rotation-box" class="market-box">
-    Lade BOERSE Rotation…
+<div id="markt2" class="box">
+    <div class="title">Markt 2 – Altwert</div>
+    <div id="m2">Lade…</div>
+</div>
+
+<div id="markt3" class="box">
+    <div class="title">Markt 3 – Neuwert</div>
+    <div id="m3">Lade…</div>
+</div>
+
+<div id="markt4" class="box">
+    <div class="title">Markt 4 – ECO Start</div>
+    <div id="m4">Lade…</div>
 </div>
 
 <script type="module">
 import { marketData } from "./MARKT/marketData.js";
-import { scanEVO } from "./MARKT/SCAN81/scanEVO.js";
 
-let step = 0;
+document.getElementById("m2").textContent =
+    marketData.markt2;
 
-async function nextTable() {
+document.getElementById("m3").textContent =
+    marketData.markt3;
 
-    const box = document.getElementById("rotation-box");
-
-    switch(step) {
-
-        // 1 — MARKT 2
-        case 0:
-            box.textContent =
-                `MARKT 2\nAltwert: ${marketData.markt2}`;
-            break;
-
-        // 2 — MARKT 3
-        case 1:
-            box.textContent =
-                `MARKT 3\nNeuwert: ${marketData.markt3}`;
-            break;
-
-        // 3 — MARKT 4
-        case 2:
-            box.textContent =
-                `MARKT 4\nECO Start: ${marketData.markt4.ecoStart}`;
-            break;
-
-        // 4 — SCAN81
-        case 3:
-            try {
-                const scan = await scanEVO();
-                box.textContent =
-                    `SCAN81\n${JSON.stringify(scan, null, 2)}`;
-            } catch (err) {
-                box.textContent = "SCAN81 ERROR: " + err.message;
-            }
-            break;
-
-        // 5 — GHOST-SCAN
-        case 4:
-            try {
-                const res = await fetch("https://iki1uc.github.io/BOERSE/");
-                box.textContent =
-                    res.ok
-                    ? `GHOST-SCAN\nBOERSE ONLINE (${res.status})`
-                    : `GHOST-SCAN\nBOERSE ERROR (${res.status})`;
-            } catch (err) {
-                box.textContent = "GHOST-SCAN ERROR: " + err.message;
-            }
-            break;
-
-        // 6 — ID-GATE
-        case 5:
-            box.textContent =
-                `ID-GATE\nWURMLOCH ✓\nGATE-KETTE ✓\nCLUSTER-ANKER ✓\nMULTINORM ✓`;
-            break;
-    }
-
-    // Nächster Schritt
-    step = (step + 1) % 6;
-}
-
-// Start
-nextTable();
-setInterval(nextTable, 2000);
+document.getElementById("m4").textContent =
+    marketData.markt4.ecoStart;
 </script>
 
 </body>
