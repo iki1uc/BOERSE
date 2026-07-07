@@ -1,69 +1,108 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Scan-Ghost – BOERSE Prüfer</title>
-    <link rel="stylesheet" href="ghost.css">
+    <title>BOERSE – ROOT GATE</title>
+    <link rel="stylesheet" href="m.css">
 </head>
 <body>
 
-<h2>Scan-Ghost – BOERSE Prüfer</h2>
+<h2>BOERSE – ROOT GATE</h2>
 
-<div id="ghost-status" class="ghost-box">Ghost Scan // waiting…</div>
-<div id="boerse-status" class="ghost-box">BOERSE // waiting…</div>
-<div id="markt-status" class="ghost-box">MARKT // waiting…</div>
+<!-- ID WURMLOCH GATE -->
+<div id="id-wurmloch" class="market-box">
+    ID-WURMLOCH // waiting…
+</div>
+
+<!-- GATE-KETTE -->
+<div id="gate-kette" class="market-box">
+    GATE-KETTE // waiting…
+</div>
+
+<!-- CLUSTER-ANKER -->
+<div id="cluster-anker" class="market-box">
+    CLUSTER-ANKER // waiting…
+</div>
+
+<!-- MULTINORM-MODUL -->
+<div id="multinorm-modul" class="market-box">
+    MULTINORM-MODUL // waiting…
+</div>
+
+<!-- MARKT 2 / 3 / 4 -->
+<div id="markt2-box" class="market-box"></div>
+<div id="markt3-box" class="market-box"></div>
+<div id="markt4-box" class="market-box"></div>
+
+<!-- SCAN81 -->
+<div id="scan81-box" class="market-box">
+    SCAN81 // waiting…
+</div>
+
+<!-- GHOST-SCAN -->
+<div id="ghostscan" class="market-box">
+    GHOST-SCAN // waiting…
+</div>
 
 <script type="module">
-async function ghostScan() {
+import { marketData } from "./MARKT/marketData.js";
+import { scanEVO } from "./MARKT/SCAN81/scanEVO.js";
+
+async function rootGate() {
+
+    // ID WURMLOCH GATE
+    document.getElementById("id-wurmloch").textContent =
+        "ID-WURMLOCH aktiv ✓";
+
+    // GATE-KETTE
+    document.getElementById("gate-kette").textContent =
+        "GATE-KETTE verbunden ✓";
+
+    // CLUSTER-ANKER
+    document.getElementById("cluster-anker").textContent =
+        "CLUSTER-ANKER stabil ✓";
+
+    // MULTINORM-MODUL
+    document.getElementById("multinorm-modul").textContent =
+        "MULTINORM-Modul geladen ✓";
+
+    // MARKT 2
+    document.getElementById("markt2-box").textContent =
+        `Markt 2 (Altwert): ${marketData.markt2}`;
+
+    // MARKT 3
+    document.getElementById("markt3-box").textContent =
+        `Markt 3 (Neuwert): ${marketData.markt3}`;
+
+    // MARKT 4
+    document.getElementById("markt4-box").textContent =
+        `Markt 4 (ECO Start): ${marketData.markt4.ecoStart}`;
+
+    // SCAN81
     try {
-        // BOERSE URL
-        const boerseURL = "https://iki1uc.github.io/BOERSE/";
-
-        // BOERSE laden
-        const res = await fetch(boerseURL);
-        const ok = res.ok;
-
-        document.getElementById("boerse-status").textContent =
-            ok
-            ? `BOERSE erreichbar ✓ (${res.status})`
-            : `BOERSE Fehler ✗ (${res.status})`;
-
-        // MARKT-Daten prüfen
-        const marktURL = "https://raw.githubusercontent.com/iki1uc/BOERSE/main/MARKT/marketData.js";
-        const marktRes = await fetch(marktURL);
-        const marktText = await marktRes.text();
-
-        document.getElementById("markt-status").textContent =
-            marktRes.ok
-            ? `MARKT-Daten geladen ✓\n${marktText}`
-            : `MARKT-Daten Fehler ✗ (${marktRes.status})`;
-
-        // Ghost-Status
-        document.getElementById("ghost-status").textContent =
-            "Ghost Scan abgeschlossen ✓";
-
+        const scan = await scanEVO();
+        document.getElementById("scan81-box").textContent =
+            `SCAN81 ✓\n${JSON.stringify(scan, null, 2)}`;
     } catch (err) {
-        document.getElementById("ghost-status").textContent =
-            "Ghost Scan ERROR: " + err.message;
+        document.getElementById("scan81-box").textContent =
+            "SCAN81 ERROR: " + err.message;
+    }
+
+    // GHOST-SCAN
+    try {
+        const res = await fetch("https://iki1uc.github.io/BOERSE/");
+        document.getElementById("ghostscan").textContent =
+            res.ok
+            ? `GHOST-SCAN ✓ BOERSE erreichbar (${res.status})`
+            : `GHOST-SCAN ✗ Fehler (${res.status})`;
+    } catch (err) {
+        document.getElementById("ghostscan").textContent =
+            "GHOST-SCAN ERROR: " + err.message;
     }
 }
 
-ghostScan();
-setInterval(ghostScan, 3000);
+rootGate();
+setInterval(rootGate, 2000);
 </script>
-
-<style>
-.ghost-box {
-    padding: 20px;
-    background: #111;
-    color: #fff;
-    font-size: 18px;
-    border: 1px solid #555;
-    white-space: pre-wrap;
-    border-radius: 6px;
-    margin-bottom: 20px;
-    font-family: monospace;
-}
-</style>
 
 </body>
 </html>
