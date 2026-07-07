@@ -1,1 +1,28 @@
 
+<script type="module">
+import { scanEVO } from "./MARKT/SCAN81/scanEVO.js";
+import { marketData } from "./MARKT/marketData.js";
+
+async function update() {
+    const scan = await scanEVO();
+
+    // SCAN81
+    document.getElementById("scan-output").textContent =
+        JSON.stringify(scan, null, 2);
+
+    // Markt 2
+    document.getElementById("markt2-box").textContent =
+        `Markt 2 (Altwert): ${marketData.markt2}`;
+
+    // Markt 3
+    document.getElementById("markt3-box").textContent =
+        `Markt 3 (Neuwert): ${marketData.markt3}`;
+
+    // Markt 4
+    document.getElementById("markt4-box").textContent =
+        `Markt 4 (ECO Start): ${marketData.markt4.ecoStart}`;
+}
+
+update();
+setInterval(update, 1500);
+</script>
