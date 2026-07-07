@@ -1,13 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MARKT-ANALYSE 81</title>
+    <link rel="stylesheet" href="../m.css">
+</head>
+<body>
+
+<h2>MARKT-ANALYSE 81</h2>
+
+<!-- SCAN81 OUTPUT -->
 <div id="scan81-output" class="scan81-box">SCAN81 // waiting…</div>
+
+<!-- MARKT-WERTE -->
+<div id="markt2-box" class="market-box"></div>
+<div id="markt3-box" class="market-box"></div>
+<div id="markt4-box" class="market-box"></div>
 
 <script type="module">
 import { scanEVO } from "./SCAN81/scanEVO.js";
+import { marketData } from "./marketData.js";
 
 async function updateScan() {
     try {
         const data = await scanEVO();
         document.getElementById("scan81-output").textContent =
             JSON.stringify(data, null, 2);
+
+        // Markt 2
+        document.getElementById("markt2-box").textContent =
+            `Markt 2 (Altwert): ${marketData.markt2}`;
+
+        // Markt 3
+        document.getElementById("markt3-box").textContent =
+            `Markt 3 (Neuwert): ${marketData.markt3}`;
+
+        // Markt 4
+        document.getElementById("markt4-box").textContent =
+            `Markt 4 (ECO Start): ${marketData.markt4.ecoStart}`;
     } catch (err) {
         document.getElementById("scan81-output").textContent =
             "SCAN81 ERROR: " + err.message;
@@ -31,3 +60,6 @@ setInterval(updateScan, 1500);
     font-family: monospace;
 }
 </style>
+
+</body>
+</html>
